@@ -1,0 +1,13 @@
+pipeline{
+    agent any
+    stages{
+        stage("init"){
+            steps{
+                echo "Clean container"
+                sh 'docker login -u ${DOCKER_USER} -p ${DOCKER_PWD}'
+                sh 'docker pull tanapongp/image-backend:lastest'
+                sh 'docker pull tanapongp/image-frontend:lastest'
+            }
+        }
+    }
+}
