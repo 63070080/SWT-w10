@@ -1,7 +1,14 @@
 pipeline{
     agent any
     stages{
-        stage("work"){
+        stage("init"){
+            steps{
+                sh 'docker stop $(docker ps -aq)'
+                sh 'docker rm $(docker ps -aq)'
+                sh 'docker rmi $(docker images -q)'
+            }
+        }
+        stage("pull"){
             steps{
                  withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'DOCKER_PWD', usernameVariable: 'DOCKER_USER')]) {
                     echo "pulling new image"
@@ -10,6 +17,13 @@ pipeline{
                     sh 'docker pull tanapongp/image-frontend:lastest'
                 }
                
+            }
+        }
+        stage("work"){
+            steps{
+                echo "running image"
+                sh 'docker run -d --name frontend -p 8088:80 tanapongp/image-backend:lastest'
+                sh 'docker run -d --name frontend -p 8081:80 tanapongp/image-frontend:lastest'
             }
         }
     }
