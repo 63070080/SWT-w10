@@ -3,9 +3,9 @@ pipeline{
     stages{
         stage("init"){
             steps{
-                sh 'docker stop $(docker ps -aq)'
-                sh 'docker rm $(docker ps -aq)'
-                sh 'docker rmi $(docker images -q)'
+                sh 'docker stop $(docker ps -aq) || true'
+                sh 'docker rm $(docker ps -aq) || true'
+                sh 'docker rmi $(docker images -q) || true'
             }
         }
         stage("pull"){
